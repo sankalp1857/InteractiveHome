@@ -6,7 +6,7 @@ from math_util import sigmoid
 
 stemmer = LancasterStemmer()
 ERROR_THRESHOLD = 0.2
-synapse_file = 'model/synapses.json'
+synapse_file = 'model/synapses-tan.json'
 with open(synapse_file) as data_file:
     synapse = json.load(data_file)
     synapse_0 = np.asarray(synapse['synapse0'])
@@ -55,5 +55,19 @@ def classify(sentence, show_details=False):
     results = think(sentence, show_details)
     results = [[i, r] for i, r in enumerate(results) if r > ERROR_THRESHOLD]
     results.sort(key=lambda x: x[1], reverse=True)
-    return_results = [(classes[r[0]], r[1]) for r in results]
+    return_results = [str(classes[r[0]]) for r in results]
     return return_results
+
+
+found_classes = classify("Turn the bedroom fan off")
+print found_classes
+
+rooms = {"bedroom", "living_room"}
+states = {"on", "off", "value"}
+appliances = {"light", "fan", "ac"}
+
+room = [x for x in found_classes if x in rooms][0]
+appliance = [x for x in found_classes if x in appliances][0]
+state = [x for x in found_classes if x in states][0]
+
+print room, appliance, state
