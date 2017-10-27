@@ -70,4 +70,53 @@ room = [x for x in found_classes if x in rooms][0]
 appliance = [x for x in found_classes if x in appliances][0]
 state = [x for x in found_classes if x in states][0]
 
-print room, appliance, state
+'''
+if room == rooms[0]:
+    if appliance == appliances[0]:
+        if state == states[0]:
+            action(0, 1)
+        elif state == states[1]:
+            action(0, 0)
+        else:
+            feedback("ask", "")
+    elif appliance == appliances[1]:
+        if state == states[0]:
+            action(1, 1)
+        elif state == states[1]:
+            action(1, 0)
+        else:
+            feedback("ask", "")
+    elif appliance == appliances[2]:
+        if state == states[0]:
+            action(2, 1)
+        elif state == states[1]:
+            action(2, 0)
+        elif state == state[2]:
+            action(2, value)
+        else:
+            feedback("ask", "")
+elif room == rooms[1]:
+    if appliance == appliances[0]:
+        if state == states[0]:
+            action(3, 1)
+        elif state == states[1]:
+            action(3, 0)
+        else:
+            feedback("ask", "")
+    elif appliance == appliances[1]:
+        if state == states[0]:
+            action(4, 1)
+        elif state == states[1]:
+            action(4, 0)
+        else:
+            feedback("ask", "")
+    elif appliance == appliances[2]:
+        if state == states[0]:
+            action(5, 1)
+        elif state == states[1]:
+            action(5, 0)
+        elif state == state[2]:
+            action(5, value)
+        else:
+            feedback("ask", "")
+'''
