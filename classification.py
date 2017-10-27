@@ -59,16 +59,19 @@ def classify(sentence, show_details=False):
     return return_results
 
 
-found_classes = classify("Turn the bedroom fan off")
+found_classes = classify("turn off")
 print found_classes
 
 rooms = {"bedroom", "living_room"}
 states = {"on", "off", "value"}
 appliances = {"light", "fan", "ac"}
 
-room = [x for x in found_classes if x in rooms][0]
-appliance = [x for x in found_classes if x in appliances][0]
-state = [x for x in found_classes if x in states][0]
+r = [x for x in found_classes if x in rooms]
+a = [x for x in found_classes if x in appliances]
+s = [x for x in found_classes if x in states]
+room = r[0] if r else None
+appliance = a[0] if a else None
+state = s[0] if s else None
 
 '''
 if room == rooms[0]:
