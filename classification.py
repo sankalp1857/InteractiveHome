@@ -14,7 +14,6 @@ with open(synapse_file) as data_file:
     classes = np.asarray(synapse['classes'])
     words = np.asarray(synapse['words'])
 
-
 def clean_up_sentence(sentence):
     # tokenize the pattern
     sentence_words = nltk.word_tokenize(sentence)
