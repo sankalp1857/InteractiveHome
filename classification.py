@@ -37,7 +37,6 @@ def bow(sentence, words, show_details=False):
 
     return np.array(bag)
 
-
 def think(sentence, show_details=False):
     x = bow(sentence.lower(), words, show_details)
     if show_details:
