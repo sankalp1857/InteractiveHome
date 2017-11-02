@@ -8,7 +8,7 @@ from math_util import sigmoid, sigmoid_output_to_derivative
 
 stemmer = LancasterStemmer()
 
-training_file = "data/training-tan.json"
+training_file = "data/training.json"
 
 with open(training_file) as data_file:
     training_data = json.load(data_file)
@@ -123,7 +123,7 @@ def train(X, y, hidden_neurons=10, alpha=1, epochs=50000, dropout=False, dropout
                'words': words,
                'classes': classes
                }
-    synapse_file = "model/synapses-tan.json"
+    synapse_file = "model/synapses.json"
 
     with open(synapse_file, 'w') as outfile:
         json.dump(synapse, outfile, indent=4, sort_keys=True)
@@ -135,7 +135,7 @@ y = np.array(output)
 
 start_time = time.time()
 
-train(X, y, hidden_neurons=20, alpha=0.1, epochs=100000, dropout=False, dropout_percent=0.2)
+train(X, y, hidden_neurons=20, alpha=0.1, epochs=150000, dropout=False, dropout_percent=0.2)
 
 elapsed_time = time.time() - start_time
 print ("processing time:", elapsed_time, "seconds")

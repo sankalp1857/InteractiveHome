@@ -6,13 +6,15 @@ from math_util import sigmoid
 
 stemmer = LancasterStemmer()
 ERROR_THRESHOLD = 0.2
-synapse_file = 'model/synapses-tan.json'
+synapse_file = 'model/synapses.json'
+
 with open(synapse_file) as data_file:
     synapse = json.load(data_file)
     synapse_0 = np.asarray(synapse['synapse0'])
     synapse_1 = np.asarray(synapse['synapse1'])
     classes = np.asarray(synapse['classes'])
     words = np.asarray(synapse['words'])
+
 
 def clean_up_sentence(sentence):
     # tokenize the pattern
@@ -35,6 +37,7 @@ def bow(sentence, words, show_details=False):
                     print ("found in bag: %s" % w)
 
     return np.array(bag)
+
 
 def think(sentence, show_details=False):
     x = bow(sentence.lower(), words, show_details)

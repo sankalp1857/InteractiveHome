@@ -1,7 +1,6 @@
 from classification import classify
 from feedback import feedback
-from action import  action
-from speech import recognise
+from action import action
 import speech_recognition as sr
 
 

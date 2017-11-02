@@ -11,6 +11,6 @@ for d in data:
         training[i]["sentence"] = str(d[1])
         i += 1
 
-training_file = "data/training-tan.json"
+training_file = "data/training.json"
 with open(training_file, 'w') as outfile:
     json.dump(training, outfile, indent=4)
