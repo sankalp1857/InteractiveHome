@@ -44,7 +44,8 @@ def getDate(text):
             month = int(strptime(''.join(str(x) for x in subtrees[i+1].leaves())[:3], '%b').tm_mon)
         if subtrees[i].label() == 'NP':
             msg_found += 1
-            if msg_found == 3 or msg_found == 4:
+            #if msg_found == 3 or msg_found == 4:
+            if msg_found == 4
                 msg = ' '.join(str(x) for x in subtrees[i].leaves())
     return year, month, day, msg
 
@@ -63,5 +64,5 @@ def traverseTree(text):
 
 
 # format should be similar
-print getDate("Set reminder for Tanmay's birthday on 14th November 2017")
+print getDate("Set reminder  on 14th November 2017 for Tanmay's birthday")
 print getAlarmTime("set an alarm for 5:30 in the evening")
