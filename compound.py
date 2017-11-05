@@ -45,7 +45,3 @@ def traverseTree(text):
     for subtree in subtrees:
         if subtree.label() == 'VP':
             print ' '.join(str(x) for x in subtree.leaves())
-
-
-print getDate("set a reminder for sankalp's birthday on 19 January 2018")
-print getAlarmTime("set an alarm for 5:30 pm")
