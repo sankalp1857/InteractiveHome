@@ -17,21 +17,36 @@ def checkCompound(text):
 
 def getAlarmTime(text):
     tree = list(parser.raw_parse(text))[0]
+    time = ""
+    time_found = False
     for subtree in tree.subtrees():
         if subtree.label() == 'CD':
-            return ' '.join(str(x) for x in subtree.leaves())
+            time = ''.join(str(x) for x in subtree.leaves())
+            time_found = True
+        if time_found and subtree.label() == 'NN':
+            s = ''.join(x for x in subtree.leaves())
+            if s == 'evening' or s == 'pm':
+                time = str(int(time[:time.index(':')])+12)+time[-3:]
+    return time
 
 
 def getDate(text):
     subtrees = list((list(parser.raw_parse(text))[0]).subtrees())
-
+    day = 0
+    year = 0
+    month = 0
+    msg = ""
+    msg_found = 0
     for i in range(len(subtrees)):
-        if subtrees[i].label() == 'CD':
-            day = int(''.join(str(x) for x in subtrees[i].leaves()))
-            month = ' '.join(str(x) for x in subtrees[i+1].leaves())
-            year = int(month.split(' ')[1])
-            month = int(strptime(month.split(' ')[0][:3], '%b').tm_mon)
-            return year, month, day
+        if subtrees[i].label() == 'JJ':
+            day = int(''.join(str(x) for x in subtrees[i].leaves())[:2])
+            year = int(''.join(str(x) for x in subtrees[i+2].leaves()))
+            month = int(strptime(''.join(str(x) for x in subtrees[i+1].leaves())[:3], '%b').tm_mon)
+        if subtrees[i].label() == 'NP':
+            msg_found += 1
+            if msg_found == 3:
+                msg = ' '.join(str(x) for x in subtrees[i].leaves())
+    return year, month, day, msg
 
 
 def traverseTree(text):
@@ -47,5 +62,6 @@ def traverseTree(text):
             print ' '.join(str(x) for x in subtree.leaves())
 
 
-print getDate("set a reminder for sankalp's birthday on 19 January 2018")
-print getAlarmTime("set an alarm for 5:30 pm")
+# format should be similar
+print getDate("Set reminder for Tanmay's birthday on 14th November 2017")
+print getAlarmTime("set an alarm for 5:30 in the evening")
