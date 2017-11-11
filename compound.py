@@ -1,4 +1,5 @@
 import os
+from nltk.tree import ParentedTree
 from nltk.parse.stanford import StanfordParser
 from time import strptime
 
@@ -31,22 +32,41 @@ def getAlarmTime(text):
 
 
 def getDate(text):
-    subtrees = list((list(parser.raw_parse(text))[0]).subtrees())
+    tree = ParentedTree.convert(list(parser.raw_parse(text))[0])
+    subtrees = list(tree.subtrees())
     day = 0
     year = 0
     month = 0
-    msg = ""
-    msg_found = 0
+    cat = 0
+
     for i in range(len(subtrees)):
         if subtrees[i].label() == 'JJ':
             day = int(''.join(str(x) for x in subtrees[i].leaves())[:2])
-            year = int(''.join(str(x) for x in subtrees[i+2].leaves()))
-            month = int(strptime(''.join(str(x) for x in subtrees[i+1].leaves())[:3], '%b').tm_mon)
-        if subtrees[i].label() == 'NP':
-            msg_found += 1
-            if msg_found == 3:
-                msg = ' '.join(str(x) for x in subtrees[i].leaves())
-    return year, month, day, msg
+            parent = subtrees[i].parent()
+            cat = len(subtrees[i].parent().leaves())
+            if cat == 1:
+                year = int(parent.parent().leaves()[2])
+                month = int(strptime(parent.parent().leaves()[1][:3], '%b').tm_mon)
+            else:
+                year = int(parent.leaves()[2])
+                month = int(strptime(parent.leaves()[1][:3], '%b').tm_mon)
+
+    return year, month, day, cat
+
+
+def getMessage(text, cat):
+    tree = ParentedTree.convert(list(parser.raw_parse(text))[0])
+    phrases_passed = 0
+    for subtree in tree.subtrees():
+        if subtree.label() == 'NP' or subtree.label() == 'VP':
+            phrases_passed += 1
+            if cat == 1 and phrases_passed == 6:
+                return ' '.join(x for x in subtree.leaves())
+            elif cat == 3 and phrases_passed == 3:
+                total = [str(x) for x in subtree.leaves()]
+                subtree = list(subtree.subtrees(filter=lambda x: x.label() == "PP"))[0]
+                pre = [str(x) for x in subtree.leaves()]
+                return ' '.join(x for x in [word for word in total if word not in pre])
 
 
 def traverseTree(text):
@@ -60,3 +80,25 @@ def traverseTree(text):
     for subtree in subtrees:
         if subtree.label() == 'VP':
             print ' '.join(str(x) for x in subtree.leaves())
+
+
+def getTemperature(text):
+    tree = list(parser.raw_parse(text))[0]
+    for subtree in tree.subtrees():
+        if subtree.label() == "CD":
+            temperature = int(''.join(x for x in subtree.leaves()))
+            if 12 >= temperature >= 1:
+                return temperature, 0
+            elif 28 >= temperature >= 16:
+                return temperature, 1
+    return -1
+
+
+# format should be similar
+text = "Remind me to buy a gift on 14th November 2017"
+year, month, day, category = getDate(text)
+msg = getMessage(text, category)
+# print year, month, day, msg
+# print getAlarmTime("set an alarm for 5:30 in the evening")
+# print list(parser.raw_parse(text))[0]
+print getTemperature("Increase the temperature by 12 degrees")
