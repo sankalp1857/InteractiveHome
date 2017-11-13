@@ -56,17 +56,25 @@ def getDate(text):
 
 def getMessage(text, cat):
     tree = ParentedTree.convert(list(parser.raw_parse(text))[0])
-    phrases_passed = 0
-    for subtree in tree.subtrees():
-        if subtree.label() == 'NP' or subtree.label() == 'VP':
-            phrases_passed += 1
-            if cat == 1 and phrases_passed == 6:
-                return ' '.join(x for x in subtree.leaves())
-            elif cat == 3 and phrases_passed == 3:
-                total = [str(x) for x in subtree.leaves()]
-                subtree = list(subtree.subtrees(filter=lambda x: x.label() == "PP"))[0]
-                pre = [str(x) for x in subtree.leaves()]
-                return ' '.join(x for x in [word for word in total if word not in pre])
+    sentences = list(tree.subtrees(filter=lambda x: x.label() == 'S'))
+    if cat == 3 and len(sentences) > 1:
+        total = sentences[1].leaves()
+        subtrees = list(sentences[1].subtrees(filter=lambda x: x.label() == 'PP'))
+        if subtrees:
+            subtrees = list(sentences[1].subtrees(filter=lambda x: x.label() == 'PP'))[0]
+            pre = [str(x) for x in subtrees.leaves()]
+            return ' '.join(x for x in [word for word in total if word not in pre])
+        else:
+            return ''.join(x for x in total)
+    elif cat == 1:
+        sentences = list(tree.subtrees(filter=lambda x: x.label() == 'NP' or x.label() == 'VP'))
+        return ' '.join(x for x in sentences[5].leaves())
+    elif cat == 3:
+        sentences = list(tree.subtrees(filter=lambda x: x.label() == 'NP' or x.label() == 'VP'))
+        total = [str(x) for x in sentences[2].leaves()]
+        subtree = list(sentences[2].subtrees(filter=lambda x: x.label() == 'PP'))[0]
+        pre = [str(x) for x in subtree.leaves()]
+        return ' '.join(x for x in [word for word in total if word not in pre])
 
 
 def traverseTree(text):
@@ -95,10 +103,10 @@ def getTemperature(text):
 
 
 # format should be similar
-text = "Remind me to buy a gift on 14th November 2017"
+text = "Set a reminder on 14th November 2017 to buy a gift"
 year, month, day, category = getDate(text)
 msg = getMessage(text, category)
-# print year, month, day, msg
+print year, month, day, msg
 # print getAlarmTime("set an alarm for 5:30 in the evening")
 # print list(parser.raw_parse(text))[0]
-print getTemperature("Increase the temperature by 12 degrees")
+# print getTemperature("Increase the temperature by 12 degrees")
