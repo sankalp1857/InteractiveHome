@@ -92,13 +92,3 @@ def getTemperature(text):
             elif 28 >= temperature >= 16:
                 return temperature, 1
     return -1
-
-
-# format should be similar
-text = "Remind me to buy a gift on 14th November 2017"
-year, month, day, category = getDate(text)
-msg = getMessage(text, category)
-# print year, month, day, msg
-# print getAlarmTime("set an alarm for 5:30 in the evening")
-# print list(parser.raw_parse(text))[0]
-print getTemperature("Increase the temperature by 12 degrees")
