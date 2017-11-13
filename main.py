@@ -1,6 +1,6 @@
 from classification import classify
 from feedback import feedback
-from action import action
+# from action import action
 import speech_recognition as sr
 
 
@@ -27,6 +27,7 @@ def main():
                 found_classes += temp
             else:
                 found_classes = temp
+            print found_classes
 
             rooms = ["bedroom", "living_room"]
             states = ["on", "off", "value"]
@@ -46,7 +47,7 @@ def main():
                     elif state == states[1]:
                         action(0, 0)
                     else:
-                        say = "STATE"
+                        say = "Forgot to tell me on or off."
                         mode = "ask"
                         feedback(mode, say)
                 elif appliance == appliances[1]:
@@ -55,7 +56,7 @@ def main():
                     elif state == states[1]:
                         action(1, 0)
                     else:
-                        say = "STATE"
+                        say = "turn it off or on"
                         mode = "ask"
                         feedback(mode, say)
                 elif appliance == appliances[2]:
@@ -66,9 +67,13 @@ def main():
                     elif state == state[2]:
                         action(2, 0.96)
                     else:
-                        say = "STATE"
+                        say = "Sorry didn't hear you."
                         mode = "ask"
                         feedback(mode, say)
+                else:
+                    say = "Which appliance?"
+                    mode = "ask"
+                    feedback(mode, say)
             elif room == rooms[1]:
                 if appliance == appliances[0]:
                     if state == states[0]:
@@ -76,7 +81,7 @@ def main():
                     elif state == states[1]:
                         action(3, 0)
                     else:
-                        say = "STATE"
+                        say = "turn it off or on"
                         mode = "ask"
                         feedback(mode, say)
                 elif appliance == appliances[1]:
@@ -85,7 +90,7 @@ def main():
                     elif state == states[1]:
                         action(4, 0)
                     else:
-                        say = "STATE"
+                        say = "Sorry didn't hear you."
                         mode = "ask"
                         feedback(mode, say)
                 elif appliance == appliances[2]:
@@ -96,28 +101,28 @@ def main():
                     elif state == state[2]:
                         action(5, 0.48)
                     else:
-                        say = "STATE"
+                        say = "Did you forget to tell me on or off."
                         mode = "ask"
                         feedback(mode, say)
                 else:
-                    say = "APPLIANCE"
+                    say = "Which appliance"
                     mode = "ask"
                     feedback(mode, say)
             else:
-                say = "ROOM"
+                say = "What's the room you say?"
                 mode = "ask"
                 feedback(mode, say)
 
         except sr.UnknownValueError:
-            say="Oops didn't catch that!"
-            mode="Error"
-            feedback(mode,say)
+            say = "Oops didn't catch that!"
+            mode = "Error"
+            feedback(mode, say)
 
-        except sr.RequestError as e:
-            say="Connectivity Problem"
+        except sr.RequestError:
+            say = "Internet seems to be down."
             mode = "Error"
             feedback(mode, say)
 
 
-if __name__== "__main__":
+if __name__ == "__main__":
     main()
