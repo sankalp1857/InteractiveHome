@@ -52,7 +52,7 @@ def main():
                             action(3, 100)
 
                         elif state == states[1]:
-                            action(0, 0)
+                            action(3, 0)
 
                         else:
                             say = "Forgot to tell me on or off."
@@ -61,10 +61,10 @@ def main():
 
                     elif appliance == appliances[1]:
                         if state == states[0]:
-                            action(1, 1)
+                            action(18, 100)
 
                         elif state == states[1]:
-                            action(1, 0)
+                            action(18, 0)
 
                         else:
                             say = "turn it off or on"
@@ -73,13 +73,14 @@ def main():
 
                     elif appliance == appliances[2]:
                         if state == states[0]:
-                            action(2, 1)
+                            action(11, 100)
 
                         elif state == states[1]:
-                            action(2, 0)
+                            action(11, 0)
 
                         elif state == state[2]:
-                            action(2, 0.96)
+                            temp = getTemperature(value)
+                            action(11, temp)
 
                         else:
                             say = "Sorry didn't hear you."
@@ -97,7 +98,7 @@ def main():
                             action(16, 100)
 
                         elif state == states[1]:
-                            action(3, 0)
+                            action(16, 0)
 
                         else:
                             say = "turn it off or on"
@@ -118,13 +119,16 @@ def main():
 
                     elif appliance == appliances[2]:
                         if state == states[0]:
-                            action(5, 1)
+                            print
+                            # action(5, 1)
 
                         elif state == states[1]:
-                            action(5, 0)
+                            print
+                            # action(5, 0)
 
                         elif state == state[2]:
-                            action(5, 0.48)
+                            print
+                            # action(5, 0.48)
 
                         else:
                             say = "Did you forget to tell me on or off."
