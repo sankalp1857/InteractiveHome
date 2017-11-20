@@ -1,4 +1,5 @@
-import speech_recognition as sr
+import socket
+import sys
 
 from action import action
 from alarm import reminder, alarm, todo
@@ -12,28 +13,50 @@ def main():
 
     found_classes = []
 
+    rooms = ["bedroom", "living_room"]
+    states = ["on", "off", "value"]
+    appliances = ["light", "fan", "ac"]
+
+    ACTION_KEY = "InteractiveHome"
+    HOST = '192.168.43.100'
+    PORT = 8888
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Bind socket to Host and Port
+    try:
+        sock.bind((HOST, PORT))
+    except socket.error as err:
+        print 'Bind Failed, Error Code: ' + str(err[0]) + ', Message: ' + err[1]
+        sys.exit()
+
+    print 'Socket Bind Success!'
+
+    sock.listen(10)
+    print 'Socket is now listening'
+
     while True:
         print("Listening...")
-        r = sr.Recognizer()
-        m = sr.Microphone()
 
-        with m as source:
-            r.adjust_for_ambient_noise(source)
+        conn, addr = sock.accept()
+        print 'Connect with ' + addr[0] + ':' + str(addr[1])
 
-        with m as source:
-            audio = r.listen(source)
+        buf = conn.recv(64)
+        value = buf.encode("utf-8")
 
-        try:
-            value = r.recognize_google(audio)
+        if ACTION_KEY in value:
+            pin = int(value[:2])
+            state = int(value[2:5])
+            action(pin, state)
+
+        else:
             temp = classify(value)
-            if len(found_classes) < 3 and 'reminder' not in found_classes and 'alarm' not in found_classes and 'todo' not in found_classes:
+
+            if len(
+                    found_classes) < 3 and 'reminder' not in found_classes and 'alarm' not in found_classes and 'todo' not in found_classes:
                 found_classes += temp
             else:
                 found_classes = temp
-
-            rooms = ["bedroom", "living_room"]
-            states = ["on", "off", "value"]
-            appliances = ["light", "fan", "ac"]
 
             r = [x for x in found_classes if x in rooms]
             a = [x for x in found_classes if x in appliances]
@@ -45,7 +68,7 @@ def main():
             is_alarm = True if 'alarm' in found_classes else False
             is_todo = True if 'todo' in found_classes else False
 
-            if room or appliance or state:
+            if not is_reminder and not is_alarm and not is_todo:
                 if room == rooms[0]:
                     if appliance == appliances[0]:
                         if state == states[0]:
@@ -113,25 +136,7 @@ def main():
                             action(4, 0)
 
                         else:
-                            say = "Sorry didn't hear you."
-                            mode = "ask"
-                            feedback(mode, say)
-
-                    elif appliance == appliances[2]:
-                        if state == states[0]:
-                            print
-                            # action(5, 1)
-
-                        elif state == states[1]:
-                            print
-                            # action(5, 0)
-
-                        elif state == state[2]:
-                            print
-                            # action(5, 0.48)
-
-                        else:
-                            say = "Did you forget to tell me on or off."
+                            say = "On or off?"
                             mode = "ask"
                             feedback(mode, say)
 
@@ -141,7 +146,7 @@ def main():
                         feedback(mode, say)
 
                 else:
-                    say = "What's the room you say?"
+                    say = "What room did you say?"
                     mode = "ask"
                     feedback(mode, say)
 
@@ -170,16 +175,6 @@ def main():
                 say = "Oops didn't catch that!"
                 mode = "Error"
                 feedback(mode, say)
-
-        except sr.UnknownValueError:
-            say = "Oops didn't catch that!"
-            mode = "Error"
-            feedback(mode, say)
-
-        except sr.RequestError:
-            say = "Internet seems to be down."
-            mode = "Error"
-            feedback(mode, say)
 
 
 if __name__ == "__main__":

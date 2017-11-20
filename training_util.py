@@ -1,14 +1,14 @@
 from pyexcel_ods import get_data
 import json
 
-data = get_data("data/training.ods")['Sheet1']
+data = get_data("data/training-small.ods")['Sheet1']
 training = [{} for d in data if d]
 
 i = 0
 for d in data:
     if d:
-        training[i]["class"] = str(d[0])
-        training[i]["sentence"] = str(d[1])
+        training[i]["class"] = d[0].encode('utf-8')
+        training[i]["sentence"] = d[1].encode('utf-8')
         i += 1
 
 training_file = "data/training.json"
