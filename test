@@ -1,0 +1,38 @@
+<body ng-app="Application" ng-controller="FeedbackController">
+	<div  ng-init="checkStatus()">
+	<div ng-model="feedback" ng-init="feedback.viewTheForm()">
+		<h1>VIEW FEEDBACK</h1>
+    <div class="table-responsive">
+   
+  <table class="table">
+
+      <tr>
+        <th>userId </th>
+        <th>rating1</th>
+        <th>rating2</th>
+        <th>rating3</th>
+        <th>rating4</th>
+        <th>rating5</th>
+        <th>Suggestions</th>
+          
+      </tr>
+
+
+<tr ng-repeat="x in feedback">
+        <td>{{x.userId}}</td>
+        <td>{{x.rating1}}</td>
+        <td>{{x.rating2}}</td>
+        <td>{{x.rating3}}</td>
+        <td>{{x.rating4}}</td>
+        <td>{{x.rating5}}</td>
+        <td>{{x.suggestion}}</td>
+          
+          
+      </tr>
+
+  </table>
+  </div>
+  </div>
+   
+   </div>
+   </body>
