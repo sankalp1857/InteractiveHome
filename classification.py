@@ -1,6 +1,7 @@
 import json
 import nltk
-from nltk.stem.lancaster import LancasterStemmer
+from nltk.stem.lancaster 
+import LancasterStemmer
 import numpy as np
 from math_util import sigmoid
 
